@@ -1,0 +1,68 @@
+def proportion_of_education():
+    import pandas as pd
+    import numpy as np
+    df = pd.read_csv('assets/NISPUF17.csv')
+    total = len(df)
+ 
+    
+    less_than_hs_bool = df[df["EDUC1"] == 1]
+    hs_bool = df[df["EDUC1"] == 2]
+    more_than_hs_no_college_bool = df[df["EDUC1"] == 3]
+    college_bool = df[df["EDUC1"] == 4]
+    
+    mom_ed = {}
+    mom_ed["less than high school"] = len(less_than_hs_bool)/total
+    mom_ed["high school"] = len(hs_bool)/total
+    mom_ed["more than high school but not college"] = len(more_than_hs_no_college_bool)/total
+    mom_ed["college"] = len(college_bool)/total
+
+    return mom_ed
+
+
+def average_influenza_doses():
+    import pandas as pd
+    import numpy as np
+    import re
+    df = pd.read_csv('assets/NISPUF17.csv')
+    
+    yes_milk = df[df["CBF_01"] == 1]
+    no_milk = df[df["CBF_01"] == 2]
+
+
+    
+    return (yes_milk["P_NUMFLU"].mean(), no_milk["P_NUMFLU"].mean())
+    
+        
+
+def chickenpox_by_sex():
+    # YOUR CODE HERE
+    import pandas as pd
+    import numpy as np
+    import re
+    df = pd.read_csv('assets/NISPUF17.csv')
+    
+    vaccinate = df[df["P_NUMVRC"] > 0]
+    chickenpox_dict = {}
+    chickenpox_dict["male"] = len(vaccinate[(vaccinate["SEX"] == 1) & (vaccinate["HAD_CPOX"] == 1)]) / len(vaccinate[(vaccinate["SEX"] == 1) & (vaccinate["HAD_CPOX"] == 2)])
+    chickenpox_dict["female"] = len(vaccinate[(vaccinate["SEX"] == 2) & (vaccinate["HAD_CPOX"] == 1)]) / len(vaccinate[(vaccinate["SEX"] == 2) & (vaccinate["HAD_CPOX"] == 2)])
+    return chickenpox_dict
+
+
+
+def corr_chickenpox():
+    import scipy.stats as stats
+    import numpy as np
+    import pandas as pd
+    
+    
+    df = pd.read_csv("assets/NISPUF17.csv")
+    df = df[(df["HAD_CPOX"] == 1) | (df["HAD_CPOX"] == 2)]
+    df = df[["HAD_CPOX", "P_NUMVRC"]].dropna()
+    
+    df.sort_index(inplace=True)
+
+    
+    corr, pval=stats.pearsonr(df["HAD_CPOX"],df["P_NUMVRC"])
+    
+    
+    return corr
